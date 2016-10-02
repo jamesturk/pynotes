@@ -19,6 +19,8 @@ The commonly used scalar types in Python are:
     A sequence of characters (can contain unicode characters).
 **bytes**
     A sequence of unsigned 8-bit entities, used for manipulating binary data.
+**None** (``NoneType``)
+    Python's null/nil equivalent.  All ``NoneType`` values have the value **None**.
 
 Numeric Types
 -------------
