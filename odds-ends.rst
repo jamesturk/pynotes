@@ -1,9 +1,6 @@
 Odds & Ends
 ===========
 
-string formatting
------------------
-
 ``assert``
 ----------
 
