@@ -51,7 +51,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Python Tutorial'
+project = 'Python Notes'
 copyright = '2016, James Turk'
 author = 'James Turk'
 
