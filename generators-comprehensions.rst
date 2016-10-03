@@ -204,3 +204,10 @@ And dict comprehensions::
     {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
     >>> {word: len(word) for word in ['dog', 'frog', 'python']}
     {'dog': 3, 'frog': 4, 'python': 6}
+
+
+Should you want a tuple comprehension you can wrap a generator comprehension in ``tuple()`` or ``frozenset()``.
+
+Coming from languages without comprehensions these can look quite foreign, but embracing them can lead to shorter but also more efficient and readable code.  Some books treat comprehensions as an "advanced" concept but hopefully these examples convince you they can be just as clear as a simple for loop.
+
+Take a breath, then let's dive into :doc:`classes`.

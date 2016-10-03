@@ -23,24 +23,80 @@ Python's ``if`` statement is relatively straightforward.  A simple example::
     else:
         print('positive')
 
+``while`` Statement
+--------------------
+
+The ``while`` statement is also pretty much what you'd expect if you've used one in another language::
+
+    while condition:
+        do_something()
+
+``break`` and ``continue``
+--------------------------
+
+Within both ``for`` and ``while`` loops you can use ``break`` and ``continue`` statements.
+
+Example::
+
+    >>> x = 0
+    >>> while True:
+    ...     x += 1
+    ...     if x == 3:
+    ...         continue
+    ...     print(x)
+    ...     if x == 5:
+    ...         break
+    1
+    2
+    4
+    5
+
 ``for`` Statement
 -----------------
 
-Python's ``for`` statement is also quite simple.  It takes the form:
+Python's ``for`` statement is also quite simple.  It takes the form::
+
+    >>> for x in [1, 2, 3]:
+    ...     print(x)
+    1
+    2
+    3
+
+
+It is also possible to attach an ``else`` clause to a ``for`` loop, the clause will only execute ifthere is no ``break`` reached within the loop::
+
+    >>> for x in [1, 2, 3]:
+    ...     print(x)
+    ... else:
+    ...     print(4)
+    1
+    2
+    3
+    4
+
+    >>> for x in ['a', 'b', 'c']
+    ...     print(x)
+    ...     if x == 'b':
+    ...         break
+    ... else:
+    ...     print('x')
+    a
+    b
+
+More generally:
 
 ``for`` *variable* ``in`` *iterable*:
     *loop body*
+[``else:``
+    *else body*
+]
 
-Unlike many other languages there aren't other forms, that's it.
-
-As you may expect, *variable* is the value that changes on each iteration of the loop.
-
-So what is *iterable*?
+As you may expect, *variable* is the value that changes on each iteration of the loop.  So what is *iterable*?
 
 iterables
 ---------
 
-The simplest iterable is any of the types we covered in the last section: ``list``, ``tuple``, ``dict``, ``set``, ``frozenset``.
+The simplest iterable is any of the types we covered in the last section: ``list``, ``tuple``, ``dict``, ``set``, ``frozenset``.  Strings are also iterable.
 
 Let's look at some examples.  Lists and tuples are straightforward, you'll iterate over them one element at a time::
 
@@ -165,32 +221,6 @@ Since ``items`` returns tuples we can use **tuple unpacking** again::
 We'll cover more iterables later when we get to **generators**, but for now let's move on to look at other control flow elements.
 
 
-``while`` Statement
---------------------
-
-The ``while`` statement is also pretty much what you'd expect if you've used one in another language::
-
-    while condition:
-        do_something()
-
-``break`` and ``continue``
---------------------------
-
-Within both ``for`` and ``while`` loops you can use ``break`` and ``continue`` statements.
-
-Example::
-
-    >>> for x in range(10):
-    ...     if x == 3:
-    ...         continue
-    ...     print(x)
-    ...     if x == 5:
-    ...         break
-    0
-    1
-    2
-    4
-    5
 
 Exception Handling
 ------------------
@@ -217,7 +247,7 @@ Let's try to access an element that doesn't exist within a list::
 
 the ``except`` clause takes the form:
 
-``except`` *ExceptionTypes* ``[as *variable*]``
+``except`` *ExceptionTypes* [``as`` *variable*]
 
 Where *ExceptionTypes* is one or more ``Exception`` names and the optional
 ``as variable`` portion allows storing the exception for further processing or display.
@@ -243,7 +273,7 @@ Common Exceptions
 ``AttributeError``
     Raised when attempting to access an attribute of an object that doesn't exist.  (e.g. ``x.this_probably_isnt_a_function()``)
 ``ImportError``
-    Raised when something cannot be ``import``ed.
+    Raised when something cannot be imported.
 ``IndexError``
     Raised when a sequence index is out of range.
 ``KeyError``
@@ -278,6 +308,6 @@ It is also possible to have two more clauses in a try-except block.
         print('always prints')
 
 
-For more on Python exceptions, see `the error handling section of the tutorial <https://docs.python.org/3/tutorial/errors.html>`_ or the `full exception list <https://docs.python.org/3/library/exceptions.html>`_
+For more on Python exceptions, see `the error handling section of the tutorial <https://docs.python.org/3/tutorial/errors.html>`_ or the `full exception list <https://docs.python.org/3/library/exceptions.html>`_.
 
 Now that we know basic control flow constructs we'll look at how Python handles :doc:`functions`.

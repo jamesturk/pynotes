@@ -224,6 +224,101 @@ The actual implementation of property is beyond the scope of what we'll cover he
 Operators
 ---------
 
+``__init__`` isn't the only special method you can define on a class.  These are often called *magic*, *double underscore*, or *dunder* methods.  These methods are typically called by invoking an operator like ``+`` or ``<=``.
+
+Let's look at an example::
+
+    class Animal:
+        def __init__(self, name):
+            self.name = name
+
+        def __add__(self, other):
+            return Animal(self.name + '-' + other.name)
+
+    >>> cow = Animal('cow')
+    >>> pig = Animal('pig')
+    >>> child = cow + pig
+    >>> child.name
+    cow-pig
+
+    >>> child
+    <__main__.Animal at 0x1075071d0>
+
+So ``__add__`` is called when we use the ``+`` operator on an ``Animal``.
+
+But what is the deal with that ugly representation of our class?
+
+Let's add another magic method::
+
+    class Animal:
+        def __init__(self, name):
+            self.name = name
+
+        def __add__(self, other):
+            return Animal(self.name + '-' + other.name)
+
+        def __repr__(self):
+            return 'Animal: ' + self.name
+
+    >>> Animal('cow') + Animal('pig')
+    Animal: cow-pig
+
+``__repr__`` governs what happens when the builtin ``repr`` method is called.  The method is supposed to return a machine-oriented representation of the class.  Often you'll see these include class names and memory addresses if that's all that Python knows to show.  The interactive Python interpreter will display the ``repr`` of each statement as we go, which is why overriding it here gives us better output.
+
+You'll often also want to override ``__str__`` which controls how the instance is converted to a string, for example in a ``print`` statement.
+
+Essentially every operator and many of the builtin methods can be overriden by using appropriate methods on the class.
+
+Here are a few we've already seen:
+
+``__len__``
+    Overrides the response of the instance to ``len()``::
+
+        class Snake:
+            def __init__(self, eyes, length):
+                self.eyes = eyes
+                self.length = length
+            def __len__(self):
+                return self.length
+
+        >>> s = Snake(2, 10)
+        >>> len(s)
+        10
+
+``__next__``
+    Can be used to convert a class into a generator::
+
+        class Infinite:
+            def __init__(self):
+                self.n = 0
+            def __next__(self):
+                self.n += 1
+                return self.n
+
+        >>> inf = Infinite()
+        >>> next(inf)
+        1
+        >>> next(inf)
+        2
+        >>> next(inf)
+        3
+
+``__call__``
+    Can be used to make a class instance callable as a function::
+
+        class AddN:
+            def __init__(self, n):
+                self.n = n
+            def __call__(self, val):
+                return self.n + val
+
+        >>> add_five = AddN(5)
+        >>> add_five(3)         # invokes __call__
+        8
+
+`Python's datamodel reference <https://docs.python.org/3/reference/datamodel.html>`_ covers the entire list.
+
+
 Inheritance
 -----------
 
