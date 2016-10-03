@@ -278,4 +278,6 @@ It is also possible to have two more clauses in a try-except block.
         print('always prints')
 
 
-For more on Python exceptions, see `the error handling section of the tutorial <https://docs.python.org/3/tutorial/errors.html>`_ or 
+For more on Python exceptions, see `the error handling section of the tutorial <https://docs.python.org/3/tutorial/errors.html>`_ or the `full exception list <https://docs.python.org/3/library/exceptions.html>`_
+
+Now that we know basic control flow constructs we'll look at how Python handles :doc:`functions`.

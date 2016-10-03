@@ -1,7 +1,7 @@
 Functions
 =========
 
-Functions in Python are a lot like functions in other langauges with a few major things to note:
+Functions in Python are a lot like functions in other languages with a few major things to note:
 
 * Functions are first-class objects, this means that they can be passed as arguments and treated like any other type.
 * All functions return a value, if no ``return`` statement is specified then ``None`` will be returned.
@@ -245,3 +245,5 @@ This looks a bit scary, but let's break it down:
     * We then use ``@login_decorator`` which is the decorator syntax.  It is equivalent to ``set_account_balance = login_decorator(set_account_balance)``, essentially calling the function and replacing the old function with it.
 
 Decorators are a powerful concept, when we look at Django we'll see many uses for them.
+
+For now we'll move on to :doc:`generators-comprehensions`.

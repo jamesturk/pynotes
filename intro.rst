@@ -150,7 +150,7 @@ Typing
 
 Python is a **strongly** & **dynamically** typed language.  This varies from other languages:
 
-If you're familiar with another interpreted langauge like JavaScript or Ruby those too are dynamically typed.  A language where the following code is valid is generally said to be dynamically typed::
+If you're familiar with another interpreted language like JavaScript or Ruby those too are dynamically typed.  A language where the following code is valid is generally said to be dynamically typed::
 
     x = "hello"
     x = 42
