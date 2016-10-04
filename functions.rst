@@ -1,236 +1,249 @@
 Functions
 =========
 
-Functions in Python are a lot like functions in most languages, there are a few things to be aware of:
+Functions in Python are a lot like functions in other languages with a few major things to note:
 
-* all functions return a value, if no value is specified there's an implicit ``return None``
-* functions can take any number of arguments, including named and unnamed variadic arguments
-* arguments can have default values
+* Functions are first-class objects, this means that they can be passed as arguments and treated like any other type.
+* All functions return a value, if no ``return`` statement is specified then ``None`` will be returned.
+* It is common to use tuples to in effect return multiple values.
+* Functions can take **positional** and **keyword** arguments.
+* It is possible to define functions that take variable numbers of arguments, and define defaults for arguments.
 
 Defining Functions
 ------------------
 
-A function in Python takes the form::
+Let's take a look at a very simple Python function::
 
-    def func(a, b=2):
-        return a + b
+    >>> def func(a, b=2):
+    ...     return a + b
 
-As noted above, an argument without a ``return`` statement has an implicit ``return None``::
+This function returns the sum of two arguments.  The second argument defaults to ``2``.  Let's call it a few ways::
 
-    >>> def func():
+    >>> func(1, 1)
+    2
+    >>> func(5)
+    7
+    >>> func()
+    TypeError: func() missing 1 required positional argument: 'a'
+
+As you can see, ``b`` is optional, but ``a`` is not.
+
+We've been passing these arguments by position, the first argument is ``a`` and the second (if supplied) is ``b``.  We can also pass these arguments by keyword::
+
+    >>> func(a=3, b=4)
+    7
+    >>> func(b=4, a=3)
+    7
+
+As you can see, the order doesn't matter when we pass arguments by keyword.  It is common to pass arguments by keyword when there are many arguments.  This makes code both easier to read and less error-prone.
+
+If a function doesn't return a value explicitly, it will return ``None``::
+
+    >>> def say_hello():
     ...     print('hello')
-    >>> x = func()
+    >>> x = say_hello()
     hello
     >>> print(x)
     None
 
-Default arguments can be overriden or ommitted::
+    >>> def pos_or_neg(num):
+    ...     if num > 0:
+    ...         return 'pos'
+    ...     elif num < 0:
+    ...         return 'neg'
+    >>> print(pos_or_neg(0))
+    None
 
-    >>> def func(a, b=2):
-    ...    return a + b
-    >>> func(3)
-    5
-    >>> func(3, 0)
-    3
-    >>> func()
-    TypeError: func() missing 1 required positional argument: 'a'
+Warning: Mutable Default Arguments
+''''''''''''''''''''''''''''''''''
 
-Functions are first-class objects, this means they can be assigned to variables::
+Let's say you have a function that has a default argument that would be a mutable object such as a ``dict`` or ``list``::
 
-    >>> def func(a, b=2):
-    ...    return a + b
-    >>> add2 = func
-    >>> add2(2)
-    4
+    >>> def make_list(item, times, initial=[]):
+    ...     new_list = initial
+    ...     for x in range(times):
+    ...         new_list.append(item)
+    ...     return new_list
+    >>> make_list(0, 10)
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    >>> make_list(2, 4)
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2]
 
-Can be passed to functions::
+That's probably not what we wanted to happen.
 
-    >>> def call_func_with_0(f):
-    ...     print('going to call function', f)
-    ...     return f(0)
-    >>> call_func_with_0(add2)
-    going to call function <function func at 0x105e4d400>
-    2
+At issue here is that the declaration of the function happens once, whereas the
+body happens every time it is called.  This means ``initial`` is set to an empty list once, but persists between calls.
 
-And they have attributes even::
+What you'd want to do in this case would be something like::
 
-    >>> def call_func_with_0(f):
-    ...     print('going to call function', f.__name__)
-    ...     return f(0)
-    >>> call_func_with_0(add2)
-    going to call function func
-    2
+    >>> def make_list(item, times, initial=None):
+    ...     if initial is None:
+    ...         initial = []        # this will be a fresh list each call
+    ...     new_list = initial
+    ...     for x in range(times):
+    ...         new_list.append(item)
+    ...     return new_list
+    >>> make_list(0, 10)
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    >>> make_list(2, 4)
+    [2, 2, 2, 2]
 
 Argument Lists
 --------------
 
-Arguments can be passed **positional** or **by keyword**.
+We've already seen how to define normal arguments and arguments with optional default values.  Let's look at how we can define functions that take multiple **positional** arguments::
 
-    >>> def lessthan(a, b):
-    ...     return a < b
-    >>> lessthan(1, 3)
-    True
-    >>> lessthan(b=1, a=3)
-    False
-
-Note that all positional arguments must preceed keyword arguments.
-
-You can also let a function take an arbitrary list of positional arguments::
-
-    >>> def add(*nums):
+    >>> def add(*numbers):
     ...     total = 0
-    ...     for num in nums:
+    ...     for num in numbers:
     ...         total += num
     ...     return total
+
+``*numbers`` will take any number of positional args and pack them into a single tuple.  Let's try calling our function::
+
+    >>> add(1,2)
+    3
+    >>> add(1,2,3)
+    6
+    >>> add(5)
+    5
     >>> add()
     0
-    >>> add(1)
-    1
-    >>> add(1,2,3,4,5)
-    15
 
-``*nums`` packs all positional arguments into a tuple.
-
-You can also let a function take an arbitary number of keyword arguments::
+We can also define functions that take multiple **keyword** values::
 
     >>> def mash(**monsters):
-    ...     for k, v in monsters.items():
-    ...         for i in range(v):
-    ...             print(k)
-    >>> mash(wolfman=3, mummy=2)
+    ...     for name, num in monsters.items():
+    ...         for x in range(num):
+    ...             print(name)
+
+``**monsters`` will pack all keyword arguments into a dictionary.  For example::
+
+    >>> mash(werewolf=4, mummy=3)
     mummy
     mummy
-    wolfman
-    wolfman
-    wolfman
+    mummy
+    werewolf
+    werewolf
+    werewolf
+    werewolf
 
-``**kwargs`` packs the keyword arguments into a dictionary.
+(Note that because this is a dictionary, order isn't preserved.)
 
-It is possible to combine these.  You'll often see syntax like::
 
-    def complex_function(arg1, arg2='default', *args, **kwargs):
+It is possible to combine all the types of arguments we've seen into a single function, but positional arguments must always come before keyword arguments.
+It's common to see functions like::
+
+    def configure_server(hostname, port=80, **kwargs):
         ...
 
-There's nothing special about the names ``args`` and ``kwargs``, but they are often used in functions like this.
+Or even::
 
-It can also be nice to have arguments that can only be passed by keyword, this can reduce errors in functions that take lots of arguments where you don't want people to rely on the order of the arguments::
+    def send_message(message, *args, **kwargs):
+        ...
 
-    def setup_server(hostname,
-                     port=80,
-                     tls_port=443,
-                     basic_auth_username=None,
-                     basic_auth_password=None,
-                     directory=None,
-                     debug_mode=False)
-    # it'd be easy to confuse the order of the 7 arguments
+There's nothing special about the names ``args`` and ``kwargs`` but they're often used in this context.
 
-    def setup_server(hostname,
-                     *,
-                     port=80,
-                     tls_port=443,
-                     basic_auth_username=None,
-                     basic_auth_password=None,
-                     directory=None,
-                     debug_mode=False)
-    # now all arguments except the required hostname must be passed by keyword
 
-.. note::
+Passing Functions
+-----------------
 
-    A common gotcha with default arguments is assigning a mutable type to them::
+As mentioned before, functions are first-class objects.  They can be passed around just like any other type in Python.
 
-        >>> def build_list(*items, start_list=[]):
-        ...     for item in items:
-        ...         start_list.append(item)
-        ...     return start_list
-        >>> build_list(1,2,3)
-        [1,2,3]
-        >>> build_list(1,2,3)
-        [1,2,3,1,2,3]
+For example::
 
-    Wait... what?
+    >>> def add(a, b):
+    ...     return a + b
 
-    It turns out that declaration of ``start_list`` isn't called once per function, it is called in the declaration.  Most likely this isn't what you meant to do.
+    >>> def mult(a, b):
+    ...     return a * b
 
-    If you want to use a mutable like a list or dict as a default argument usually you'll benefit from a pattern like::
+    >>> def call_func(f):
+    ...     print('about to call function', f, 'with 3 and 4')
+    ...     return f(3, 4)
 
-        >>> def build_list(*items, start_list=None):
-        ...     if start_list is None:
-        ...         start_list = []
-        ...     for item in items:
-        ...         start_list.append(item)
-        ...     return start_list
-        >>> build_list(1,2,3)
-        [1,2,3]
-        >>> build_list(1,2,3)
-        [1,2,3]
+    >>> call_func(add)
+    about to call function <function add at 0x10edc9ea0> with 3 and 4'
+    7
+    >>> call_func(add)
+    about to call function <function mult at 0x10ed27a60> with 3 and 4'
+    12
+
 
 Lambdas
 -------
 
-Sometimes you want to pass a function as an argument but don't want to declare an entire function before doing so.  An example might be to the built-in ``sorted`` function that sorts an iterable and takes an optional ``key`` parameter which expects a function returning the value to sort by::
+Sometimes it is nice to be able to declare a function inline, typically as you pass it to another function.
+
+A common example of this is the builtin ``sorted`` function that takes an optional ``key`` argument to determine the value to sort on.
+
+Let's look at a use case::
 
     >>> animals = ['cat', 'Dog', 'Fish']
     >>> sorted(animals)
     ['Dog', 'Fish', 'cat']
 
-    >>> def lower(s):
+    >>> def lowercase(s):
     ...     return s.lower()
-    >>> sorted(animals, key=lower)
+
+    >>> sorted(animals, key=lowercase)
     ['cat', 'Dog', 'Fish']
 
-But we'd like to not create the extra function ``lower`` just for this purpose.
+But it'd be nice not to have to define this throwaway ``lowercase`` function, so we'll use a lambda::
 
-``lambda`` allows us to create a single expression function where that expression is the return value.  We'd rewrite our above example like so::
-
-    >>> sorted(animals, key=lambda s: s.lower())
+    >>> sorted(animals, key=lambda s: s.lowercase())
     ['cat', 'Dog', 'Fish']
 
-Lambda can take any number of arguments (variable names before the ``:``) but can only have a single statement.  This statement is what is returned.
+Lambdas in Python are intentionally constrained.  They can take any number of arguments, but the body (after the ``:``) must consist of a single expression which will be considered the return value.
 
-This means lambdas are inherently quite limited, this is intentional.  Long & complex lambdas would make code less readable, and are almost always better written as a named function for clarity.
+If you find yourself wanting a longer ``lambda`` it is generally a better idea to just define a full function.  This leads to clearer and more maintainable code.
 
 Decorators
 ----------
 
-Imagine a situation where you want to wrap a bunch of function calls in similar behavior, perhaps you're checking a credential before accessing sensitive information.
-
-You might have a bunch of code like::
+Sometimes you'll find yourself with functions resembling::
 
     def check_account_balance(username, password):
-        user = login(username, password)
-        if user:
+        success = login(username, password)
+        if success:
             ...
         else:
-            raise InvalidUserException()
+            raise InvalidUserError()
 
-    def set_account_balance(username, password, value):
+    def set_account_balance(username, password, val):
         user = login(username, password)
-        if user:
+        if success:
             ...
         else:
-            raise InvalidUserException()
+            raise InvalidUserError()
 
-In many cases it is desirable to simplify the handling of the redundant code.  A decorator allows you to specify a function that 'wraps' another function, performing consistent behavior before and after.  We might rewrite the above like::
+It'd be nice not to have that same boiler plate in each function.
 
-    def login_decorator(f):
-        def new_function(username, password, *args, **kwargs):
-            user = login(username, password)
-            if user:
-                f(user, *args, **kwargs)
+This is where **decorators** come in handy.  Decorators allow you to wrap a function call with another, for example::
+
+    def login_decorator(oldfunc):
+        def newfunc(username, password, *args, **kwargs):
+            success = login(username, password)
+            if success:
+                return oldfunc(username, password, *args, **kwargs)
             else:
-                raise InvalidUserException()
-        return new_function
+                raise InvalidUserError()
+        return newfunc
 
     @login_decorator
-    def check_account_balance(user):
+    def check_account_balance(username, password):
         ...
 
     @login_decorator
-    def set_account_balance(user, val):
+    def set_account_balance(username, password, val):
         ...
 
-This may seem complex but it builds on everything we've seen here:
+This looks a bit scary, but let's break it down:
 
-    * ``login_decorator`` is a normal python function, it just happens to take a single arugment that is another function ``f`` and returns a new function that it defines on the fly that does the user logic and then calls the wrapped function ``f``.
-    * We're capturing the extra arguments in ``*args`` and ``**kwargs`` and passing them along if present.
-    * The only new piece is ``@login_decorator``, this is the call to the decorator.  It is equivalent to ``set_account_balance = login_decorator(set_account_balance)``, effectively replacing our defined function with whatever the return value of the decorator function is.
+    * ``login_decorator`` is a function that takes a single argument ``oldfunc``, which is the function it is decorating.
+    * Within this function we're defining another function ``newfunc`` that does our boilerplate and might call ``oldfunc`` if appropriate.
+    * We then use ``@login_decorator`` which is the decorator syntax.  It is equivalent to ``set_account_balance = login_decorator(set_account_balance)``, essentially calling the function and replacing the old function with it.
+
+Decorators are a powerful concept, when we look at Django we'll see many uses for them.
+
+For now we'll move on to :doc:`generators-comprehensions`.

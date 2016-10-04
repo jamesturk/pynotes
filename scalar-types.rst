@@ -19,8 +19,8 @@ The commonly used scalar types in Python are:
     A sequence of characters (can contain unicode characters).
 **bytes**
     A sequence of unsigned 8-bit entities, used for manipulating binary data.
-**None** (``NoneType``)
-    Python's null/nil equivalent.  All ``NoneType`` values have the value **None**.
+**NoneType** (``None``)
+    Python's null or nil equivalent, every instance of ``None`` is of ``NoneType``.
 
 Numeric Types
 -------------
@@ -92,6 +92,24 @@ It is also possible to use ``*`` to repeat a string::
 
     >>> 'hey ' * 3
     'hey hey hey '
+
+Another common operation is **string formatting**, the putting other data inside of a string.  We do this using the ``.format`` method on the string instance.
+
+The way this works is you insert placeholders like ``{}`` into the string, and then ``format()`` will fill them with its parameters.
+
+Examples::
+
+    >>> 'hello {}'.format('world')
+    hello world
+    >>> '{} {}'.format('hello', 'world')
+    hello world
+    >>> '{1} {0}'.format('world', 'hello')
+    hello world
+    >>> '{first} {second}'.format(first='hello', second='world')
+
+As you can see, it is possible to either leave the placeholder blank, in which case it will use its position within the string to determine the order, or you can explicitly order them or name them.  We'll see how this works when we touch on function arguments.
+
+`More on format <https://docs.python.org/3.4/library/string.html#formatspec>`_ and `other string methods <https://docs.python.org/3/library/stdtypes.html#string-methods>`_.
 
 Bytes
 -----
