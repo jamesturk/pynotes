@@ -322,5 +322,83 @@ Here are a few we've already seen:
 Inheritance
 -----------
 
-Generators
-----------
+Like many object oriented languages Python allows classes to inherit from one another. 
+
+Inheritance means that a child class will have the same attributes and methods as the parent class, and can add (or override) these methods.
+
+Let's look at an example::
+
+    class Square:
+        def __init__(self, w, h):
+            self.w = w
+            self.h = h
+
+        def whoami(self):
+            print('square')
+
+        def area(self):
+            return self.w * self.h
+
+
+    class Cube(Square):
+        def __init__(self, w, h, d):
+            super().__init__(w, h)
+            self.d = d
+
+        def whoami(self):
+            print('cube')
+
+        def volume(self):
+            return self.w * self.h * self.d
+
+    >>> s = Square(3, 4)
+    >>> c = Cube(2, 3, 4)
+    >>> s.whoami()
+    square
+    >>> c.whoami()
+    cube
+    >>> s.area()
+    12
+    >>> c.volume()
+    24
+    >>> isinstance(s, Square)
+    True
+    >>> isinstance(c, Square)
+    True
+    >>> isinstance(s, Cube)
+    False
+    >>> isinstance(c, Cube)
+    True
+    >>> issubclass(Cube, Square)
+    True
+
+A few things to note:
+
+    * We use ``super()`` to access the parent's methods.  There's a lot more that ``super()`` can do, but in Python 3 this is the most common & easiest usage.
+    * ``whoami`` is overridden, if you're coming from a language like C++ you may notice that this is done without any special syntax (``virtual`` or its ilk)
+    * ``volume`` is an entirely new method, and only available on the subclass.
+    * ``isinstance`` will tell us that a ``Cube`` instance is a ``Square`` but not vice versa.
+    * ``issubclass`` operates on types, and helps us verify that ``Cube`` is indeed a subclass of ``Square``.
+
+Note that any methods can be overridden, including special ``__dunder__`` methods.  In fact, when we define any class we're subclassing ``object`` and overriding
+the defaults that it provides.
+
+Just to hammer home this point let's subclass ``int`` and ``list``::
+
+    class badint(int):
+        def __add__(self, other):
+            return self - other
+
+    >>> a = badint(4)
+    >>> a + 5
+    -1
+
+    class badlist(list):
+        def __getitem__(self, index):
+            return ':P'
+
+    >>> b = badlist([1,2,3,4])
+    >>> b[0]
+    ':P'
+    >>> b[500]
+    ':P'
