@@ -351,6 +351,8 @@ Let's look at an example::
         def volume(self):
             return self.w * self.h * self.d
 
+::
+
     >>> s = Square(3, 4)
     >>> c = Cube(2, 3, 4)
     >>> s.whoami()
@@ -385,20 +387,67 @@ the defaults that it provides.
 
 Just to hammer home this point let's subclass ``int`` and ``list``::
 
-    class badint(int):
-        def __add__(self, other):
-            return self - other
+    >>> class badint(int):
+    ...    def __add__(self, other):
+    ...        return self - other
 
     >>> a = badint(4)
     >>> a + 5
     -1
 
-    class badlist(list):
-        def __getitem__(self, index):
-            return ':P'
+    >>> class badlist(list):
+    ...    def __getitem__(self, index):
+    ...        return ':P'
 
     >>> b = badlist([1,2,3,4])
     >>> b[0]
     ':P'
     >>> b[500]
     ':P'
+
+Multiple Inheritance
+''''''''''''''''''''
+
+It is also possible to have a class subclass multiple other classes.  This is known as multiple inheritance and opens up an order of magnitude more confusing situations.
+
+The most important detail is that method calls (and calls to ``super()``) will walk through the "MRO" or method resolution order.  This is generally defined by the order you specify your subclasses.
+
+This means if two subclasses specify a method or attribute with the same name, the one specified first will win.  For example::
+
+    class Color:
+        def __init__(self, name, hex):
+            self.name = name
+            self.hex = hex
+
+        def identify(self):
+            return 'Color {} ({})'.format(self.name, self.hex)
+
+    class Fruit:
+        def __init__(self, name, juicy):
+            self.name = name
+            self.juicy = juicy
+
+        def identify(self):
+            return 'Fruit {} is {} juicy'.format(self.name, self.juicy)
+
+    class Orange(Color, Fruit):
+        def __init__(self):
+            super().__init__('orange', '#ffa500')
+            Fruit.__init__(self, 'orange', 2)
+
+
+We can see that by default ``super()`` called the first listed parent::
+
+    >>> o = Orange()
+    >>> o.identify()
+    'Color orange (#ffa500)'
+
+We can explicitly check this via the ``__mro__`` (method resolution order)::
+
+    >>> Orange.__mro__
+    (__main__.Orange, __main__.Color, __main__.Fruit, object)
+
+Explicit calls to other conflicting properties are possible, but generally avoided::
+
+    >>> Fruit.identify(o)
+    'Fruit orange is 2 juicy'
