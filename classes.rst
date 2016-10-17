@@ -140,6 +140,8 @@ Let's define our class again but forget ``self`` on a method::
         def restock(number):            # Notice the error here.
             self.number += number
 
+::
+
     >>> bi = BrokenItem('egg')
     >>> bi.restock(40)
     TypeError: sell() takes 1 positional argument but 2 were given
@@ -235,6 +237,7 @@ Let's look at an example::
         def __add__(self, other):
             return Animal(self.name + '-' + other.name)
 
+::
     >>> cow = Animal('cow')
     >>> pig = Animal('pig')
     >>> child = cow + pig
@@ -260,6 +263,8 @@ Let's add another magic method::
         def __repr__(self):
             return 'Animal: ' + self.name
 
+::
+
     >>> Animal('cow') + Animal('pig')
     Animal: cow-pig
 
@@ -281,6 +286,8 @@ Here are a few we've already seen:
             def __len__(self):
                 return self.length
 
+::
+
         >>> s = Snake(2, 10)
         >>> len(s)
         10
@@ -294,6 +301,8 @@ Here are a few we've already seen:
             def __next__(self):
                 self.n += 1
                 return self.n
+
+::
 
         >>> inf = Infinite()
         >>> next(inf)
@@ -311,6 +320,8 @@ Here are a few we've already seen:
                 self.n = n
             def __call__(self, val):
                 return self.n + val
+
+::
 
         >>> add_five = AddN(5)
         >>> add_five(3)         # invokes __call__
