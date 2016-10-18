@@ -175,8 +175,80 @@ Notice the addition of the trailing ``if`` statement, as well as the fact we're 
 
 (Also recall that we'd probably do this by passing the step argument to range in real code, which would avoid the evaluation step here.)
 
-Other Comprehensions
---------------------
+map, filter, reduce
+-------------------
+
+You have have seen functions with these names in other contexts.  These are available in Python but often not used since comprehensions provide the same behavior.
+
+Let's look at some examples::
+
+    >>> for i in map(lambda x: x**2, range(5)):
+    ...     print(i)
+    0
+    1
+    4
+    9
+    16
+
+The first argument of map is a function (often a ``lambda``) and the second is an iterable.  The result is an iterable where each value is processed through the function.
+
+This is equivalent to the simple generator expression::
+
+    >>> for i in (x**2 for x in range(5)):
+    ...     print(i)
+    0
+    1
+    4
+    9
+    16
+
+``filter`` allows for removing values from the iterable based on a test.  For example::
+
+    >>> for i in filter(lambda x: x % 2, range(10)):
+    ...     print(i)
+    1
+    3
+    5
+    7
+    9
+
+This too is equivalent to a generator expression::
+
+    >>> for i in (x for x in range(10) if x % 2):
+    ...     print(i)
+    1
+    3
+    5
+    7
+    9
+
+The above generator expression ``((i, i**2) for i in range(10) if i % 2)`` can be recreated with map & filter::
+
+    >>> gen_exp = map(lambda i: (i, i**2), filter(lambda i: i % 2, range(10)))
+    >>> for n, n2 in gen_exp:
+    ...     print(n, 'squared is', n2)
+    1 squared is 1
+    3 squared is 9
+    5 squared is 25
+    7 squared is 49
+    9 squared is 81
+
+But you'll probably agree that the generator expression looks nicer.
+
+
+The other function often mentioned with ``map`` and ``filter`` is ``reduce``.
+
+``reduce`` is a bit different, it takes a function that takes two items and combines them to one, it is called continuously on the iterable's items until a single value is produced.  A simple example would be a sum function::
+
+    >>> from functools import reduce
+    >>> reduce(lambda a, b: a+b, [1,2,3,4])
+    10
+
+We'll talk more about ``import`` and appropriate uses of ``reduce`` later.
+
+
+List, Set, and Dict Comprehensions
+----------------------------------
 
 Earlier we saw an example of using a generator function to construct a list.  This is a useful thing to be able to do, and there's a more direct way to get this functionality without making a generator as an intermediary.
 
