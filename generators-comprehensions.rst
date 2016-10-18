@@ -134,9 +134,9 @@ Generators are extremely powerful, the `Python docs for generators <https://docs
 Comprehensions
 --------------
 
-We don't need to define a function to create a generator, we can also use a **generator comprehension**.
+We don't need to define a function to create a generator, we can also use a **generator expression**.
 
-A generator comprehension is a statement in the format:
+A generator expression is a statement in the format:
 
 (*expr* ``for`` *var* ``in`` *iterable*)
 
@@ -178,7 +178,7 @@ Notice the addition of the trailing ``if`` statement, as well as the fact we're 
 map, filter, reduce
 -------------------
 
-You have have seen functions with these names in other contexts.  These are available in Python but often not used since comprehensions provide the same behavior.
+You have have seen functions with these names in other contexts.  These are available in Python but often not used since generator expressions provide the same behavior.
 
 Let's look at some examples::
 
@@ -247,12 +247,12 @@ The other function often mentioned with ``map`` and ``filter`` is ``reduce``.
 We'll talk more about ``import`` and appropriate uses of ``reduce`` later.
 
 
-List, Set, and Dict Comprehensions
-----------------------------------
+Comprehensions
+---------------
 
-Earlier we saw an example of using a generator function to construct a list.  This is a useful thing to be able to do, and there's a more direct way to get this functionality without making a generator as an intermediary.
+Earlier we saw an example of using a generator to construct a list.  This is a useful thing to be able to do, and there's a more direct way to get this functionality without making a generator as an intermediary.
 
-Similar to the generator comprehension, we can use a **list comprehension**.  The only difference is that these comprehensions are surrounded by ``[]`` instead of parentheses.
+Similar to the generator expression, we can use a **list comprehension**.  The only difference is that these list comprehensions are surrounded by ``[]`` instead of parentheses.
 
 Let's look at some list comprehensions::
 
@@ -278,7 +278,7 @@ And dict comprehensions::
     {'dog': 3, 'frog': 4, 'python': 6}
 
 
-Should you want a tuple comprehension you can wrap a generator comprehension in ``tuple()`` or ``frozenset()``.
+Should you want a tuple comprehension you can wrap a generator expression in ``tuple()`` or ``frozenset()``.
 
 Coming from languages without comprehensions these can look quite foreign, but embracing them can lead to shorter but also more efficient and readable code.  Some books treat comprehensions as an "advanced" concept but hopefully these examples convince you they can be just as clear as a simple for loop.
 
